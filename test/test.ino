@@ -77,10 +77,6 @@ void setup()
   s_E.setAcceleration(2000);
   s_F.setMaxSpeed(16000);
   s_F.setAcceleration(2000);
-  
-  //stepper.moveTo(STEPS);
-  //stepper1.moveTo(STEPS);
-  //stepper2.moveTo(STEPS);
 
   // Get i2c address from switches
   pinMode(ADDR_1, INPUT_PULLUP);

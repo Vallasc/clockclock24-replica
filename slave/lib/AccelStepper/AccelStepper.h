@@ -363,6 +363,8 @@ public:
     /// \param[in] backward void-returning procedure that will make a backward step
     AccelStepper(void (*forward)(), void (*backward)());
     
+    void    setMaxSteps(long steps);
+
     /// Set the target position. The run() function will try to move the motor (at most one step per call)
     /// from the current position to the target position set by the most
     /// recent call to this function. Caution: moveTo() also recalculates the speed for the next step. 
@@ -370,6 +372,8 @@ public:
     /// \param[in] absolute The desired absolute position. Negative is
     /// anticlockwise from the 0 position.
     void    moveTo(long absolute); 
+
+    void    moveToDirection(long absolute, boolean clockwise); 
 
     /// Set the target position relative to the current position
     /// \param[in] relative The desired position relative to the current position. Negative is
@@ -383,6 +387,8 @@ public:
     /// based on the current speed and the time since the last step.
     /// \return true if the motor is still running to the target position.
     boolean run();
+
+    bool runDirection();
 
     /// Poll the motor and step it if a step is due, implementing a constant
     /// speed as set by the most recent call to setSpeed(). You must call this as
@@ -425,6 +431,8 @@ public:
     /// \return the distance from the current position to the target position
     /// in steps. Positive is clockwise from the current position.
     long    distanceToGo();
+
+    long distanceToGoDirection(boolean clockwise);
 
     /// The most recently set target position.
     /// \return the target position
@@ -531,6 +539,7 @@ protected:
     /// \li  after change to target position (relative or absolute) through
     /// move() or moveTo()
     void           computeNewSpeed();
+    void           computeNewSpeedDirection();
 
     /// Low level function to set the motor output pins
     /// bit 0 of the mask corresponds to _pin[0]
@@ -668,6 +677,13 @@ private:
 
     /// Min step size in microseconds based on maxSpeed
     float _cmin; // at max speed
+
+    /// Max motor steps per revolution
+    long _max_steps;
+
+    /// Motor direction in absolute movement
+    /// true == clockwise
+    bool _motor_direction;
 
 };
 

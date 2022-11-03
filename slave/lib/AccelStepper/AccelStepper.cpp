@@ -20,12 +20,28 @@ void dump(uint8_t* p, int l)
 }
 #endif
 
+void AccelStepper::setMaxSteps(long steps)
+{
+    _max_steps = steps;
+}
+
 void AccelStepper::moveTo(long absolute)
 {
     if (_targetPos != absolute)
     {
 	_targetPos = absolute;
 	computeNewSpeed();
+	// compute new n?
+    }
+}
+
+void AccelStepper::moveToDirection(long absolute, bool clockwise)
+{
+    _motor_direction = clockwise;
+    if (_targetPos != absolute)
+    {
+	_targetPos = absolute;
+	computeNewSpeedDirection();
 	// compute new n?
     }
 }
@@ -50,12 +66,12 @@ boolean AccelStepper::runSpeed()
 	if (_direction == DIRECTION_CW)
 	{
 	    // Clockwise
-	    _currentPos += 1;
+	    _currentPos = _currentPos + 1;
 	}
 	else
 	{
 	    // Anticlockwise  
-	    _currentPos -= 1;
+	    _currentPos = _currentPos - 1;
 	}
 	step(_currentPos);
 
@@ -67,6 +83,16 @@ boolean AccelStepper::runSpeed()
     {
 	return false;
     }
+}
+
+long AccelStepper::distanceToGoDirection(boolean clockwise)
+{
+    long distance = (_targetPos - _currentPos) % _max_steps;
+    if(clockwise)
+        distance = distance < 0 ? _max_steps + distance : distance;
+    else
+        distance = distance > 0 ? distance - _max_steps : distance;
+    return distance;
 }
 
 long AccelStepper::distanceToGo()
@@ -94,6 +120,79 @@ void AccelStepper::setCurrentPosition(long position)
     _speed = 0.0;
 }
 
+void AccelStepper::computeNewSpeedDirection(){
+    long distanceTo = distanceToGoDirection(_motor_direction); // +ve is clockwise from curent location
+
+    long stepsToStop = (long)((_speed * _speed) / (2.0 * _acceleration)); // Equation 16
+
+    if (distanceTo == 0 && stepsToStop <= 1)
+    {
+	// We are at the target and its time to stop
+	_stepInterval = 0;
+	_speed = 0.0;
+	_n = 0;
+	return;
+    }
+
+    if (distanceTo > 0)
+    {
+        // We are anticlockwise from the target
+        // Need to go clockwise from here, maybe decelerate now
+        if (_n > 0)
+        {
+            // Currently accelerating, need to decel now? Or maybe going the wrong way?
+            if ((stepsToStop >= distanceTo) || _direction == DIRECTION_CCW)
+            _n = -stepsToStop; // Start deceleration
+        }
+        else if (_n < 0)
+        {
+            // Currently decelerating, need to accel again?
+            if ((stepsToStop < distanceTo) && _direction == DIRECTION_CW)
+            _n = -_n; // Start accceleration
+        }
+    }
+    else if (distanceTo < 0)
+    {
+        // We are clockwise from the target
+        // Need to go anticlockwise from here, maybe decelerate
+        if (_n > 0)
+        {
+            // Currently accelerating, need to decel now? Or maybe going the wrong way?
+            if ((stepsToStop >= -distanceTo) || _direction == DIRECTION_CW)
+            _n = -stepsToStop; // Start deceleration
+        }
+        else if (_n < 0)
+        {
+            // Currently decelerating, need to accel again?
+            if ((stepsToStop < -distanceTo) && _direction == DIRECTION_CCW)
+            _n = -_n; // Start accceleration
+        }
+    }
+
+    // Need to accelerate or decelerate
+    if (_n == 0)
+    {
+        // First step from stopped
+        _cn = _c0;
+        _direction = (distanceTo > 0) ? DIRECTION_CW : DIRECTION_CCW;
+        Serial.println(distanceTo);
+        Serial.println(_targetPos - _currentPos);
+        Serial.println();
+
+    }
+    else
+    {
+        // Subsequent step. Works for accel (n is +_ve) and decel (n is -ve).
+        _cn = _cn - ((2.0 * _cn) / ((4.0 * _n) + 1)); // Equation 13
+        _cn = max(_cn, _cmin); 
+    }
+    _n++;
+    _stepInterval = _cn;
+    _speed = 1000000.0 / _cn;
+    if (_direction == DIRECTION_CCW)
+	_speed = -_speed;
+}
+
 void AccelStepper::computeNewSpeed()
 {
     long distanceTo = distanceToGo(); // +ve is clockwise from curent location
@@ -111,51 +210,55 @@ void AccelStepper::computeNewSpeed()
 
     if (distanceTo > 0)
     {
-	// We are anticlockwise from the target
-	// Need to go clockwise from here, maybe decelerate now
-	if (_n > 0)
-	{
-	    // Currently accelerating, need to decel now? Or maybe going the wrong way?
-	    if ((stepsToStop >= distanceTo) || _direction == DIRECTION_CCW)
-		_n = -stepsToStop; // Start deceleration
-	}
-	else if (_n < 0)
-	{
-	    // Currently decelerating, need to accel again?
-	    if ((stepsToStop < distanceTo) && _direction == DIRECTION_CW)
-		_n = -_n; // Start accceleration
-	}
+        // We are anticlockwise from the target
+        // Need to go clockwise from here, maybe decelerate now
+        if (_n > 0)
+        {
+            // Currently accelerating, need to decel now? Or maybe going the wrong way?
+            if ((stepsToStop >= distanceTo) || _direction == DIRECTION_CCW)
+            _n = -stepsToStop; // Start deceleration
+        }
+        else if (_n < 0)
+        {
+            // Currently decelerating, need to accel again?
+            if ((stepsToStop < distanceTo) && _direction == DIRECTION_CW)
+            _n = -_n; // Start accceleration
+        }
     }
     else if (distanceTo < 0)
     {
-	// We are clockwise from the target
-	// Need to go anticlockwise from here, maybe decelerate
-	if (_n > 0)
-	{
-	    // Currently accelerating, need to decel now? Or maybe going the wrong way?
-	    if ((stepsToStop >= -distanceTo) || _direction == DIRECTION_CW)
-		_n = -stepsToStop; // Start deceleration
-	}
-	else if (_n < 0)
-	{
-	    // Currently decelerating, need to accel again?
-	    if ((stepsToStop < -distanceTo) && _direction == DIRECTION_CCW)
-		_n = -_n; // Start accceleration
-	}
+        // We are clockwise from the target
+        // Need to go anticlockwise from here, maybe decelerate
+        if (_n > 0)
+        {
+            // Currently accelerating, need to decel now? Or maybe going the wrong way?
+            if ((stepsToStop >= -distanceTo) || _direction == DIRECTION_CW)
+            _n = -stepsToStop; // Start deceleration
+        }
+        else if (_n < 0)
+        {
+            // Currently decelerating, need to accel again?
+            if ((stepsToStop < -distanceTo) && _direction == DIRECTION_CCW)
+            _n = -_n; // Start accceleration
+        }
     }
 
     // Need to accelerate or decelerate
     if (_n == 0)
     {
-	// First step from stopped
-	_cn = _c0;
-	_direction = (distanceTo > 0) ? DIRECTION_CW : DIRECTION_CCW;
+        // First step from stopped
+        _cn = _c0;
+        _direction = (distanceTo > 0) ? DIRECTION_CW : DIRECTION_CCW;
+        Serial.println(distanceTo);
+        Serial.println(_targetPos - _currentPos);
+        Serial.println();
+
     }
     else
     {
-	// Subsequent step. Works for accel (n is +_ve) and decel (n is -ve).
-	_cn = _cn - ((2.0 * _cn) / ((4.0 * _n) + 1)); // Equation 13
-	_cn = max(_cn, _cmin); 
+        // Subsequent step. Works for accel (n is +_ve) and decel (n is -ve).
+        _cn = _cn - ((2.0 * _cn) / ((4.0 * _n) + 1)); // Equation 13
+        _cn = max(_cn, _cmin); 
     }
     _n++;
     _stepInterval = _cn;
@@ -185,6 +288,13 @@ boolean AccelStepper::run()
     if (runSpeed())
 	computeNewSpeed();
     return _speed != 0.0 || distanceToGo() != 0;
+}
+
+boolean AccelStepper::runDirection()
+{
+    if (runSpeed())
+	computeNewSpeedDirection();
+    return _speed != 0.0 || distanceToGoDirection(_motor_direction) != 0;
 }
 
 AccelStepper::AccelStepper(uint8_t interface, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, bool enable)
@@ -219,6 +329,7 @@ AccelStepper::AccelStepper(uint8_t interface, uint8_t pin1, uint8_t pin2, uint8_
 	enableOutputs();
     // Some reasonable default
     setAcceleration(1);
+    _motor_direction = true;
 }
 
 AccelStepper::AccelStepper(void (*forward)(), void (*backward)())
