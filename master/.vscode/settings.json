@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "limits": "cpp",
+        "functional": "cpp"
+    }
+}
