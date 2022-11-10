@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "minimize.js",
+  "type": "module",
+  "scripts": {
+    "minimize": "node minimize.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "html-minifier": "^4.0.0"
+  }
+}
