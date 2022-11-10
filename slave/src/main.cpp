@@ -1,65 +1,95 @@
-#include <Arduino.h>
-#include <AccelStepper.h>
 #include <Wire.h>
 
-#include "config.h"
+#include "board_config.h"
 #include "board.h"
+#include "clock_state.h"
+#include "i2c.h"
 
-// Called when the I2C slave is read from
-// void requestEvent() {
-//   Wire.write("hello ");
-// }
+const t_clock default_clock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-// void receiveEvent(int howMany)
-// {
-//   while(Wire.available()) // loop through all but the last
-//   {
-//     char c = Wire.read(); // receive byte as a character
-//     Serial.print(c);         // print the character
-//   }
-//   int x = Wire.read();    // receive byte as an integer
-//   Serial.println(x);         // print the integer
-//   while (Wire.available()) { // peripheral may send less than requested
-//     char c = Wire.read(); // receive a byte as character
-//     Serial.println(c);         // print the character
-//   } 
-// }
+// int spin_num; //The spin lock number
+spin_lock_t *spin_lock[3]; //The spinlock object that will be associated with spin_num
+
+t_half_digit target_clocks_state;
+t_half_digit current_clocks_state;
+
+// I2C runs on main core (core 0)
+void receiveEvent(int how_many)
+{
+  // Serial.println("Received something");
+  if (how_many >= sizeof(half_digit))
+  {
+    t_half_digit tmp_state;
+    I2C_readAnything (tmp_state);
+
+    for (uint8_t i = 0; i < 3; i++)
+    {
+      spin_lock_unsafe_blocking(spin_lock[i]); //Acquire the spin lock without disabling interrupts
+      target_clocks_state.clocks[i] = tmp_state.clocks[i];
+      target_clocks_state.change_counter[i] = tmp_state.change_counter[i];
+      spin_unlock_unsafe(spin_lock[i]); //Release the spin lock without re-enabling interrupts
+      // Serial.printf("clock %d, %d %d, c: %d\n", 
+      //   i,
+      //   target_clocks_state.clocks[i].speed_h,
+      //   target_clocks_state.clocks[i].accel_h,
+      //   target_clocks_state.change_counter[i]);
+    }
+  }
+}
 
 void setup()
 {  
   Serial.begin(115200);
-  delay(2000);
-  Serial.println("clockclock24 replica by Vallasc");
+  Serial.println("clockclock24 replica by Vallasc slave v1.0");
 
   board_begin();
+  target_clocks_state = {{default_clock, default_clock, default_clock}, {0, 0, 0}};
 
-  // Wire.begin(i2c_address);
-  // Wire.onRequest(requestEvent);
-  // Wire.onReceive(receiveEvent);
-  // t_clock state = {180, 90, 500, 500, 500, 500, clockwise, clockwise};
-  // set_clock1(state);
+  for (uint8_t i = 0; i < 3; i++)
+  {
+    int spin_num = spin_lock_claim_unused(true); //Claim a free spin lock. If true the function will panic if none are available
+    spin_lock[i] = spin_lock_init(spin_num); //Initialise a spin lock
+  }
+
+  Wire.begin(get_i2c_address());
+  Wire.onReceive(receiveEvent);
 }
-
-int pos = 275;
 
 void loop()
 {
+  delay(10);
+}
+
+void setup1() 
+{
+  current_clocks_state = {{default_clock, default_clock, default_clock}, {0, 0, 0}};
+}
+
+// Steppers on core 1
+void loop1()
+{
   board_loop();
-  if(!clock1_distance_to_go(true, false)){
-    delay(1000);
-    pos = (pos - 50) % 360;
-    pos = pos < 0 ? 360 + pos : pos;
-    Serial.println(pos);
-    t_clock state = {pos, 0, 500, 500, 500, 500, counterclockwise, counterclockwise};
-    set_clock1(state);
+  for (uint8_t i = 0; i < 3; i++)
+  {
+    if(!clock_is_running(i) && current_clocks_state.change_counter[i] != target_clocks_state.change_counter[i])
+    {
+      //Serial.printf("Inside clock %d\n", i);
+      spin_lock_unsafe_blocking(spin_lock[i]);
+      current_clocks_state.clocks[i] = target_clocks_state.clocks[i];
+      current_clocks_state.change_counter[i] = target_clocks_state.change_counter[i];
+      spin_unlock_unsafe(spin_lock[i]);
+
+      if(current_clocks_state.clocks[i].mode_h == ADJUST_LANCET)
+        adjust_h_lancet(i, current_clocks_state.clocks[i].adjust_h);
+
+      if(current_clocks_state.clocks[i].mode_m == ADJUST_LANCET)
+        adjust_m_lancet(i, current_clocks_state.clocks[i].adjust_m);
+
+      if(current_clocks_state.clocks[i].mode_h <= MAX_DISTANCE3)
+        set_clock(i, current_clocks_state.clocks[i]);
+    }
   }
 }
 
-void setup1()
-{  
-}
 
-void loop1()
-{  
-  Serial.println("We we");
-}
+// TODo motor disable
