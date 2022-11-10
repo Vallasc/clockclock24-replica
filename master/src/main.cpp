@@ -40,12 +40,12 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   set_mode(LAZY);
 
-  if(get_wireless_mode() == HOTSPOT)
+  if(get_connection_mode() == HOTSPOT)
     wifi_create_AP();
   else
   {
     if( !wifi_connect(get_ssid(), get_password()) ){
-      set_wireless_mode(HOTSPOT);
+      set_connection_mode(HOTSPOT);
       wifi_create_AP();
     }
   }
@@ -58,7 +58,7 @@ void setup() {
 
 void loop() {
 
-  if(get_wireless_mode() == HOTSPOT && is_time_changed_browser())
+  if(get_connection_mode() == HOTSPOT && is_time_changed_browser())
   {
     t_browser_time browser_time = get_browser_time();
     setTime(browser_time.hour, 
@@ -69,7 +69,7 @@ void loop() {
       browser_time.year);
   }
 
-  if(get_wireless_mode() == EXT_CONN && get_timezone() != get_ntp_timezone())
+  if(get_connection_mode() == EXT_CONN && get_timezone() != get_ntp_timezone())
   {
     set_ntp_timezone(get_timezone());
     setSyncProvider(get_NTP_time);

@@ -62,7 +62,7 @@ void handle_get_config()
       "\"ssid\":\"%s\","
       "\"password\":\"%s\","
       "\"sleep_time\":%s}",
-      get_clock_mode(), get_wireless_mode(), get_ssid(), get_password(), s_time);
+      get_clock_mode(), get_connection_mode(), get_ssid(), get_password(), s_time);
   }
   _server.send(200, "application/json", payload);
 }
@@ -143,7 +143,7 @@ void handle_post_connection()
 {
   Serial.println("Handle POST /connection");
   if (_server.hasArg("mode"))
-    set_wireless_mode(_server.arg("mode").toInt());
+    set_connection_mode(_server.arg("mode").toInt());
   if (_server.hasArg("ssid"))
     set_ssid(_server.arg("ssid").c_str());
   if (_server.hasArg("password"))
