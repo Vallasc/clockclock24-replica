@@ -1,0 +1,749 @@
+<html>
+<head>
+  <title>ClockClock 24 (replica)</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 490 490'%3E%3Cstyle xmlns='http://www.w3.org/2000/svg'%3E %23fav %7B stroke: %23000; fill: %23000; %7D @media (prefers-color-scheme: dark) %7B %23fav %7B stroke: %23fff; fill: %23fff; %7D %7D %3C/style%3E%3Cg id='fav'%3E%3Cg%3E%3Cpath d='M233.004,0C104.224,0,0,104.212,0,233.004c0,128.781,104.212,233.004,233.004,233.004 c128.782,0,233.004-104.212,233.004-233.004C466.008,104.222,361.796,0,233.004,0z M244.484,242.659l-63.512,75.511 c-5.333,6.34-14.797,7.156-21.135,1.824c-6.34-5.333-7.157-14.795-1.824-21.135l59.991-71.325V58.028c0-8.284,6.716-15,15-15 s15,6.716,15,15v174.976h0C248.004,236.536,246.757,239.956,244.484,242.659z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml" />
+  <style>
+
+    html {
+      width: 100%;
+      height: 100%;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Tahoma, Helvetica, sans-serif;
+      color: #FFF;
+      background-color: #212121;
+      cursor: default;
+      user-select: none;
+      font-size: 14px;
+    }
+    
+    #art {
+      margin: 80px 0;
+    }
+    
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .text {
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    a {
+      color: #8a8a8a;
+      text-decoration: none;
+    }
+    
+    .half-digit {
+      float: left;
+    }
+    
+    .clock {
+      --small-hand: 90deg;
+      --large-hand: 90deg;
+      width: 8vw;
+      height: 8vw;
+      border-radius: 50%;
+      box-shadow: inset 0 0 3px #fff;
+      float: left;
+      cursor: pointer;
+      position: absolute;
+    }
+    
+    .clock:nth-of-type(n + 1) {
+      clear: left;
+    }
+    
+    .clock-smallHand,
+    .clock-largeHand {
+      transform-origin: 50px center;
+      transition: transform 15s;
+    }
+    
+    .clock-smallHand {
+      transform: rotateZ(var(--small-hand));
+    }
+    
+    .clock-largeHand {
+      transform: rotateZ(var(--large-hand));
+    }
+    
+    .hidden .btn-clock {
+      display: none;
+    }
+    
+    #external.hidden {
+      display: none;
+    }
+    
+    .btn-clock {
+      position: absolute;
+      width: 4vw;
+      height: 4vw;
+      background-color: #212121dc;
+      box-shadow: inset 0 0 3px #fff;
+      font-size: 0.8vw;
+      font-weight: bold;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .btn-clock:hover {
+      background-color: #c60a0a;
+    }
+    
+    .btn-clock.btn-clock-tl {
+      border-radius: 4vw 0 0 0;
+    }
+    
+    .btn-clock.btn-clock-tr {
+      margin-left: 4vw;
+      border-radius: 0 4vw 0 0;
+    }
+    
+    .btn-clock.btn-clock-bl {
+      margin-top: 4vw;
+      border-radius: 0 0 0 4vw;
+    }
+    
+    .btn-clock.btn-clock-br {
+      margin-left: 4vw;
+      margin-top: 4vw;
+      border-radius: 0 0 4vw 0;
+    }
+    
+    .clock-box {
+      width: 8vw;
+      height: 8vw;
+      margin: 0.2vw;
+    }
+    
+    .btn {
+      width: 72px;
+      height: 48px;
+      margin: 4px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      border-width: 0;
+      padding: 0;
+      background-color: transparent;
+      color: #fff;
+      box-shadow: inset 0 0 2px #dfdfdf;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      float: left;
+    }
+    
+    .btn:hover {
+      background-color: #b4b4b44b;
+    }
+    
+    .btn.active {
+      background-color: #dfdfdf;
+      box-shadow: inset 0 0 0 2px #dfdfdf;
+      color: black;
+    }
+    
+    .btn.day-active {
+      background-color: #dfdfdf;
+      box-shadow: inset 0 0 0 2px #dfdfdf;
+      color: black;
+      padding-bottom: 8px;
+      margin-bottom: 0;
+    }
+    
+    .checkbox {
+      width: 44px;
+      height: 16px;
+      box-shadow: inset 0 0 1px black;
+      float: left;
+      margin: 2px;
+      margin-bottom: 8px;
+    }
+    
+    .checkbox:hover {
+      background-color: #b4b4b4;
+    }
+    
+    .checkbox.selected {
+      background-color: black;
+    }
+    
+    .hour-text {
+      width: 48px;
+      height: 16px;
+      color: #212121dc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      float: left;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    
+    .spacer {
+      height: 24px;
+    }
+    
+    .input-text {
+      width: 172px;
+      height: 48px;
+      margin: 4px;
+      box-shadow: inset 0 0 2px #dfdfdf;
+      background-color: transparent;
+      border-color: transparent;
+      color: white;
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-left: 16px;
+      padding-right: 16px;
+      font-size: 16px;
+      float: left;
+      display: inline;
+      white-space: nowrap;
+      border-width: 0;
+    }
+    
+    .input-text:focus-visible {
+        outline: transparent;
+    }
+    
+    .input-text::selection {
+      color: black;
+      background: white;
+    }
+    
+    .hours-box {
+      background-color: #dfdfdf;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+  </style>
+</head>
+<body id="body">
+<div class="spacer"></div>
+<h1>ClockClock 24 (replica)</h1>
+<div id="art"></div>
+<div class="spacer"></div>
+<div class="title">
+  Mode
+</div>
+<div id="modes"></div>
+<div class="spacer"></div>
+<div class="title">
+  Sleep Time
+</div>
+<div id="days"></div>
+<div id="hours"></div>
+<div class="spacer"></div>
+<div class="title">
+  Wireless Connection
+</div>
+<div id="wifi">
+  <div class="btn" style="width:150px" id="con-0" onclick="selectConnection(0)">HOTSPOT</div>
+  <div class="btn" style="width:150px" id="con-1" onclick="selectConnection(1)">EXTERNAL</div>
+</div>
+<form id="external" class="hidden" onsubmit="return false;">
+  <input type="text" id="ssid" class="input-text" placeholder="SSID" minlength="1" required/>
+  <input type="password" id="password" class="input-text" placeholder="PASSWORD" minlength="1" required/>
+  <button type="submit" class="btn" style="width:100px" onclick="saveConnection()">SAVE</button>
+</form>
+<div class="spacer"></div>
+<div class="spacer"></div>
+<div class="text"> 
+  <p><small>Code</small><br/><a href="http://www.vallasc.github.com/">Giacomo Vallorani</a></p>
+  <p><small>Clock animation</small><br/><a href="https://manu.ninja/">Manuel Wieser</a></p>
+  <p><small>Design</small><br/><a href="http://www.humanssince1982.com/">Humans since 1982</a></p>
+</div>
+<script>
+  // Hours when the clock remains off
+  let sleep = [Array(24).fill(0), 
+              Array(24).fill(0), 
+              Array(24).fill(0), 
+              Array(24).fill(0), 
+              Array(24).fill(0), 
+              Array(24).fill(0), 
+              Array(24).fill(0)]
+
+  // Current selected animation mode
+  let selectedMode = undefined
+  // Current selected mode
+  let selectedClock = undefined
+  // Current selected day
+  let selectedDay = undefined
+  // Current selected connection mode
+  let selectedConnection = undefined
+  // Wifi credentials
+  let ssid = ""
+  let password = ""
+
+  /* DOM making */
+
+  // Returns a single clock HTML element
+  function clock(index) {
+    return `<div id="clock-${index}" class="clock-box hidden"><svg class="clock clock--${index}" width="100" height="100" viewBox="0 0 100 100" onclick="selectClock(${index})"><path class="clock-smallHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L95,53 L95,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path><path class="clock-largeHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L100,53 L100,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path></svg><div class="btn-clock btn-clock-tl" onclick="adjustLancet(${index}, 0, 1)">H+</div><div class="btn-clock btn-clock-tr" onclick="adjustLancet(${index}, 1, 0)">M+</div><div class="btn-clock btn-clock-bl" onclick="adjustLancet(${index}, 0, -1)">H-</div><div class="btn-clock btn-clock-br" onclick="adjustLancet(${index}, -1, 0)">M-</div></div>`
+  }
+
+  // Makes modes buttons 
+  function genModes() {
+    let modes = ["LAZY", "FUN", "OFF"]
+    let html = ""
+    let i = 0
+    for (let m of modes)
+      html += `<div id="mode-${i}" class="btn ${i === selectedMode ? "active" : ""}" onclick="selectMode(${i++})">${m}</div>`
+    document.getElementById("modes").innerHTML = html
+  }
+
+  // Makes the full clock
+  function genClocks() {
+    let html = `<div class="half-digit">`
+    for (let i = 0; i <24; i++) {
+      if(i % 3 == 0 && i != 0) {
+        html += "</div>"
+        html += `<div class="half-digit">`
+      }
+      html += clock(i)
+    }
+    html += "</div>"
+    document.getElementById("art").innerHTML = html
+  }
+
+  // Makes days buttons
+  function genDays() {
+    let days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+    let html = ""
+    let i = 0
+    for (let day of days)
+      html += `<div id="day-${i}" class="btn" onclick="selectDay(${i++})">${day}</div>`
+    document.getElementById("days").innerHTML = html
+  }
+
+  // Makes hours card
+  function genHours(day) {
+    let html = `<div class="hours-box"><div>`
+    for (let i = 0; i <=12; i++)
+      html += `<div class="hour-text">${i}</div>`
+    html += `</div><div>`
+    for (let i = 0; i <12; i++)
+      html += `<div id="hour-${i}" class="checkbox ${sleep[day][i] === 1 ? "selected" : ""}" onclick="selectHour(${i})"></div>`
+    html += "</div><div>"
+    for (let i = 12; i <=24; i++)
+      html += `<div class="hour-text">${i%24}</div>`
+    html += `</div><div>`
+    for (let i = 12; i <24; i++)
+      html += `<div id="hour-${i}" class="checkbox ${sleep[day][i] === 1 ? "selected" : ""}" onclick="selectHour(${i})"></div>`
+    html += "</div></div>"
+    document.getElementById("hours").innerHTML = html
+  }
+
+  // Called on buttons clicks to select the mode
+  function selectMode(mode) {
+    mode === 2 ? stopClock() : startClock()
+    if(selectedMode !== undefined)
+      document.getElementById("mode-" + selectedMode).classList.remove("active")
+    selectedMode = mode
+    document.getElementById("mode-" + selectedMode).classList.add("active")
+    saveMode(selectedMode)
+  }
+
+  // Called on buttons clicks to select the day
+  function selectDay(day) {
+    deselectDay()
+    if(selectedDay !== day) {
+      selectedDay = day
+      document.getElementById("day-" + selectedDay).classList.add("day-active")
+      genHours(day)
+    }
+  }
+
+  // Remove selection on the last day button
+  function deselectDay() {
+    if(selectedDay !== undefined)
+      document.getElementById("day-" + selectedDay).classList.remove("day-active")
+    selectedDay = undefined
+    document.getElementById("hours").innerHTML = ""
+  }
+
+  // Select the hour and update the sleep array
+  function selectHour(index) {
+    let state = sleep[parseInt(selectedDay)][index]
+    sleep[parseInt(selectedDay)][index] = state === 1 ? 0 : 1
+    if(state === 0)
+      document.getElementById("hour-" + index).classList.add("selected")
+    else
+      document.getElementById("hour-" + index).classList.remove("selected")
+    saveSleepTime(selectedDay, sleep[parseInt(selectedDay)])
+  }
+
+  // Remove selection on the last selected clock
+  function deselectClock() {
+    if(selectedClock !== undefined)
+      document.getElementById("clock-" + selectedClock).classList.add("hidden")
+      selectedClock = undefined
+  }
+
+  // Select a clock showing buttons on top of it
+  function selectClock(index) {
+    deselectClock()
+    selectedClock = index
+    document.getElementById("clock-" + selectedClock).classList.remove("hidden")
+  }
+
+  // Called on buttons click to change connection type
+  function selectConnection(mode) {
+    // Remove last selection
+    if(selectedConnection !== undefined){
+      document.getElementById("con-" + selectedConnection).classList.remove("active")
+      document.getElementById("external").classList.add("hidden")
+    }
+    // Hotspot mode, update directly
+    if(mode === 0 && selectedConnection !== mode)
+        saveConnection()
+    selectedConnection = mode
+    if(mode === 1) // Show SSID and password fields
+      document.getElementById("external").classList.remove("hidden")
+    document.getElementById("con-" + selectedConnection).classList.add("active")
+  }
+
+  // Deselect all buttons on focus change
+  document.addEventListener("click", function(e) {
+    if (e.target.id === "body") {
+      deselectClock()
+      deselectDay()
+    }
+  })
+
+  // Makes all the HTML elements
+  genClocks()
+  genModes()
+  genDays()
+
+  /* Server calls */
+
+  // Send current datetime to clock
+  function sendDate() {
+    const d = new Date()
+    let formData = new FormData()
+    formData.append("h", d.getHours().toString())
+    formData.append("m", d.getMinutes().toString())
+    formData.append("s", d.getSeconds().toString())
+    formData.append("D", d.getDate().toString())
+    formData.append("M", (d.getMonth()+1).toString())
+    formData.append("Y", d.getFullYear().toString())
+    formData.append("timezone", (d.getTimezoneOffset() / -60).toString())
+    fetch("/time", {
+      method: "post",
+      body: formData,
+    })
+  }
+
+  // Gets clock configuration from the server
+  async function updateConfig() {
+    let response = await fetch("/config", {
+      method: "get",
+    })
+    let res = await response.json()
+    sleep = res.sleep_time
+    if(selectedDay !== undefined)
+      genHours(selectedDay)
+    selectMode(res.clock_mode)
+    selectConnection(res.wireless_mode)
+    document.getElementById("ssid").value = ssid = res.ssid
+    document.getElementById("password").value = password = res.password
+  }
+
+  // Sends an adjust lancet request
+  function adjustLancet(index, m_amount, h_amount) {
+    let f = new FormData()
+    f.append("index", index.toString())
+    f.append("m_amount", m_amount.toString())
+    f.append("h_amount", h_amount.toString())
+    fetch("/adjust", {
+      method: "post",
+      body: f,
+    })
+  }
+
+  // Sends a request to save the clock mode
+  function saveMode(mode) {
+    let f = new FormData()
+    f.append("mode", mode.toString())
+    fetch("/mode", {
+      method: "post",
+      body: f,
+    })
+  }
+
+
+  // Last modified sleep day
+  // Used to delay and aggregate request in order not to
+  // overload the system
+  let lastSleepDay = undefined
+  let sleepTimeout = undefined
+
+  // Sends a request to save the sleep time array
+  function saveSleepTime(day, hours) {
+    // If there is already a timeout clears it
+    if(lastSleepDay === day)
+      clearTimeout(sleepTimeout);
+    lastSleepDay = day
+    // Delayed request
+    sleepTimeout = setTimeout(()=>{
+      let f = new FormData()
+      f.append("day", day.toString())
+      for (let i = 0; i < 24; i++)
+        f.append("h" + i, hours[i].toString())
+      fetch("/sleep", {
+        method: "post",
+        body: f
+      })
+    }, 1500)
+  }
+
+  // Sends a request to save the connection type
+  async function saveConnection() {
+    ssid = document.getElementById("ssid").value;
+    password = document.getElementById("password").value;
+    let f = new FormData()
+    f.append("mode", selectedConnection.toString())
+    f.append("ssid", ssid)
+    f.append("password", password)
+    await fetch("/connection", {
+      method: "post",
+      body: f,
+    })
+    location.reload()
+  }
+
+  // On the first run, updates the datetime on the clock and
+  // then updates web state
+  sendDate()
+  updateConfig()
+
+  /* Clock animation */
+
+  // Stop digit
+  const digit_stop = [
+    [270, 270],
+    [270, 270],
+    [270, 270],
+    [270, 270],
+    [270, 270],
+    [270, 270]
+  ]
+
+  // Number's digits
+  const digits = [
+    [    /* 0 */
+      [270, 0],
+      [270, 90],
+      [0, 90],
+      [270, 180],
+      [270, 90],
+      [180, 90]
+    ], [ /* 1 */
+      [225, 225],
+      [225, 225],
+      [225, 225],
+      [270, 270],
+      [270, 90],
+      [90, 90]
+    ], [ /* 2 */
+      [0, 0],
+      [270, 0],
+      [90, 0],
+      [180, 270],
+      [90, 180],
+      [180, 180]
+    ], [ /* 3 */
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [180, 270],
+      [180, 90],
+      [180, 90]
+    ], [ /* 4 */
+      [270, 270],
+      [90, 0],
+      [225, 225],
+      [270, 270],
+      [270, 90],
+      [90, 90]
+    ], [ /* 5 */
+      [270, 0],
+      [90, 0],
+      [0, 0],
+      [180, 180],
+      [270, 180],
+      [90, 180]
+    ], [ /* 6 */
+      [270, 0],
+      [270, 90],
+      [90, 0],
+      [180, 180],
+      [270, 180],
+      [90, 180]
+    ], [ /* 7 */
+      [0, 0],
+      [225, 225],
+      [225, 225],
+      [270, 180],
+      [270, 90],
+      [90, 90]
+    ], [ /* 8 */
+      [270, 0],
+      [90, 0],
+      [90, 0],
+      [270, 180],
+      [90, 180],
+      [90, 180]
+    ], [ /* 9 */
+      [270, 0],
+      [0, 90],
+      [0, 0],
+      [270, 180],
+      [270, 90],
+      [90, 180]
+    ]
+  ]
+
+  // Current state of the SVG animation
+  let anim_state = Array(4).fill().map(() => Array(6).fill().map(()=>[90, 90]))
+  // Internal offset state
+  let current_state = Array(4).fill().map(() => Array(6).fill().map(()=> [270, 270]))
+
+  // Sets hand[id] to specified angles
+  function setHands(id, h, m) {
+    const clock = document.querySelector(`.clock--${id}`)
+    clock.style.setProperty(`--small-hand`, `${h}deg`)
+    clock.style.setProperty(`--large-hand`, `${m}deg`)
+  }
+
+  // Calculates the difference angle in counter clockwise direction
+  function calcAngleCCW(current_angle, target_angle) {
+    let delta = (target_angle - current_angle) % 360
+    return Math.abs((delta <= 0) ? -delta : 360 - delta)
+  }
+
+  // Calculates the difference angle in clockwise direction
+  function calcAngleCW(current_angle, target_angle) {
+    let delta = (target_angle - current_angle) % 360
+    return Math.abs((delta < 0) ? 360 + delta : delta)
+  }
+
+  // Calculates and sets the digit on the clock
+  function setDigit(id, values) {
+    for (let x = 0; x < 6; x++) {
+      const curr = current_state[id][x]
+      const anim = anim_state[id][x]
+      const d1 = calcAngleCW(curr[0], values[x][0])
+      const d2 = calcAngleCCW(curr[0], values[x][0])
+      if(d1 <= d2) { /* Clockwise */
+        curr[0] = (curr[0] + d1) % 360 
+        anim[0] = anim[0] - d1 
+      } else { /* Counterclockwise */
+        curr[0] = (curr[0] - d2) % 360 
+        if(curr[0] < 0)
+          curr[0] += 360
+        anim[0] = anim[0] + d2 
+      }
+
+      const d3 = calcAngleCW(curr[1], values[x][1])
+      const d4 = calcAngleCCW(curr[1], values[x][1])
+      if(d3 <= d4) { /* Clockwise */
+        curr[1] = (curr[1] + d3) % 360 
+        anim[1] = anim[1] - d3 
+      } else { /* Counterclockwise */
+        curr[1] = (curr[1] - d4) % 360
+        if(curr[1] < 0)
+          curr[1] += 360
+        anim[1] = anim[1] + d4 
+      }
+
+      setHands(id * 6 + x, anim[0], anim[1])
+    }
+  }
+
+  // Sets stop position
+  function setStop() {
+    setDigit(0, digit_stop)
+    setDigit(1, digit_stop)
+    setDigit(2, digit_stop)
+    setDigit(3, digit_stop)
+  }
+
+
+  // Last time setted on clock
+  let lastTime
+  
+  // Sets current time on clock
+  function setTime() {
+    const d = new Date();
+    const time = d.toTimeString().substring(0,5);
+    const day = (d.getDay() + 6) % 7
+    const hours = d.getHours()
+    if (time !== lastTime && sleep[day][hours] === 0) {
+      lastTime = time
+      setDigit(0, digits[time.charAt(0)])
+      setDigit(1, digits[time.charAt(1)])
+      setDigit(2, digits[time.charAt(3)])
+      setDigit(3, digits[time.charAt(4)])
+    } else if (sleep[day][hours] === 1) {
+      setStop()
+    }
+  }
+
+  let clockInterval = undefined
+
+  // Sets an interval to update the clock periodically
+  function startClock() {
+    if(clockInterval === undefined) {
+      lastTime = undefined
+      clockInterval = setInterval(setTime, 500)
+    }
+  }
+
+  // Clears interval and set the clock on stop position
+  function stopClock() {
+    clearInterval(clockInterval)
+    clockInterval = undefined
+    setTimeout(setStop, 100)
+  }
+
+  let lastClockInterval = undefined
+
+  // Disables intervals when tab is out of focus
+  document.addEventListener("visibilitychange", (event) => {
+    if (document.visibilityState == "visible") {
+      if(lastClockInterval !== undefined)
+        clockInterval = setInterval(setTime, 500)
+    } else {
+      lastClockInterval = clockInterval
+      clearInterval(clockInterval)
+    }
+  });
+
+  // Start clock animation
+  startClock()
+</script>
+</body>
+</html>
