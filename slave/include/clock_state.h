@@ -1,14 +1,20 @@
-#include <Arduino.h>
+#ifndef CLOCK_STATE_H
+#define CLOCK_STATE_H
 
-enum modes {
-    min_distance,
-    max_distance,
-    clockwise,
-    clockwise2,
-    clockwise3,
-    counterclockwise,
-    counterclockwise2,
-    counterclockwise3
+enum directions {
+    CLOCKWISE,
+    CLOCKWISE2,
+    CLOCKWISE3,
+    COUNTERCLOCKWISE,
+    COUNTERCLOCKWISE2,
+    COUNTERCLOCKWISE3,
+    MIN_DISTANCE,
+    MIN_DISTANCE2,
+    MIN_DISTANCE3,
+    MAX_DISTANCE,
+    MAX_DISTANCE2,
+    MAX_DISTANCE3,
+    ADJUST_LANCET
 };
 
 typedef struct clock_state {
@@ -20,11 +26,13 @@ typedef struct clock_state {
     uint16_t accel_m;
     uint8_t mode_h;
     uint8_t mode_m;
+    signed char adjust_h;
+    signed char adjust_m;
 } t_clock;
 
 typedef struct half_digit {
-    t_clock clock_1;
-    t_clock clock_2;
-    t_clock clock_3;
-    uint8_t i2c_address;
+    t_clock clocks[3];
+    uint32_t change_counter[3];
 } t_half_digit;
+
+#endif
