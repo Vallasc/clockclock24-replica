@@ -1,7 +1,9 @@
 #include "clock_config.h"
 
+// Non volatile preferences
 Preferences prefs;
 
+// Internal config state
 int _clock_mode;
 bool _sleep_time[7 * 24];
 int _clock_timezone;
@@ -24,6 +26,11 @@ void begin_config()
     memset(_sleep_time, 0, sizeof(_sleep_time));
 }
 
+void end_config()
+{
+  prefs.end();
+}
+
 void clear_config()
 {
   prefs.clear();
@@ -44,7 +51,7 @@ bool get_sleep_time(int day, int hour)
   return _sleep_time[(day * 24) + (hour % 24)];
 }
 
-int get_wireless_mode()
+int get_connection_mode()
 {
   return _wireless_mode;
 }
@@ -80,7 +87,7 @@ void save_sleep_time()
   prefs.putBytes("sleep_time", _sleep_time, sizeof(_sleep_time));
 }
 
-void set_wireless_mode(int value)
+void set_connection_mode(int value)
 {
   _wireless_mode = value;
   prefs.putInt("wireless_mode", value);
