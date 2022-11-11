@@ -18,30 +18,66 @@ typedef struct browser_time
   int year;
 } t_browser_time;
 
+/**
+ * Starts and configures the server
+*/
 void server_start();
 
+/**
+ * Client handling, needs to be called on the main loop
+*/
 void handle_webclient();
 
+/**
+ * Stops the server and free resources
+*/
 void server_stop();
 
+/**
+ * Handles GET /
+*/
 void handle_get();
 
-void handle_post_time();
-
-void handle_post_adjust();
-
+/**
+ * Handles GET /config
+*/
 void handle_get_config();
 
+/**
+ * Handles POST /time
+*/
+void handle_post_time();
+
+/**
+ * Handles POST /adjust
+*/
 void handle_post_adjust();
 
+/**
+ * Handles POST /mode
+*/
 void handle_post_mode();
 
+/**
+ * Handles POST /sleep
+*/
 void handle_post_sleep();
 
+/**
+ * Handles POST /connection
+*/
 void handle_post_connection();
 
+/**
+ * Check if the client changed the time
+ * @return true if the client makes a request, false otherwise
+*/
 bool is_time_changed_browser();
 
+/**
+ * Return the client's browser time
+ * @return time
+*/
 t_browser_time get_browser_time();
 
 #endif

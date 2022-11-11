@@ -15,17 +15,42 @@ int last_hour = -1;
 int last_minute = -1;
 bool is_stopped = false;
 
-void stop();
-void set_time(int mode);
+/**
+ * Sets clock to the current time
+*/
+void set_time();
+
+/**
+ * Sets clock time using lazy animation
+*/
 void set_lazy();
+
+/**
+ * Sets clock time using fun animation
+*/
 void set_fun();
+
+/**
+ * Sets clock time using waves animation
+*/
 void set_waves();
 
+/**
+ * Sets clock to stop state
+*/
+void stop();
+
+/**
+ * Custom delay to update web clients
+ * @param value   time in milliseconds
+*/
+void _delay(int value);
 
 void setup() {
   Serial.begin(115200);
   Serial.println("\nclockclock24 replica by Vallasc master v1.0");
   delay(3000);
+  // Load configuration from EEPROM
   begin_config();
 
   Wire.begin();
@@ -33,17 +58,18 @@ void setup() {
 
   if(get_connection_mode() == HOTSPOT)
     wifi_create_AP("ClockClock 24", "clockclock24");
-  else
+  else if( !wifi_connect(get_ssid(), get_password(), "clockclock24") )
   {
-    if( !wifi_connect(get_ssid(), get_password(), "clockclock24") ){
-      set_connection_mode(HOTSPOT);
-      wifi_create_AP("ClockClock 24", "clockclock24");
-    }
+    set_connection_mode(HOTSPOT);
+    wifi_create_AP("ClockClock 24", "clockclock24");
   }
+  // Starts web server
   server_start();
 
+  // Initialize NTP
   begin_NTP();
   setSyncProvider(get_NTP_time);
+  // Sync every 30 minutes
   setSyncInterval(60 * 30);
 }
 
@@ -66,25 +92,14 @@ void loop() {
     setSyncProvider(get_NTP_time);
   }
 
-  get_clock_mode() != OFF ? set_time(get_clock_mode()) : stop();
+  get_clock_mode() != OFF ? set_time() : stop();
 
   update_MDNS();
   handle_webclient();
 }
 
-void _delay(int value)
+void set_time()
 {
-  for (int i = 0; i <value/100; i++)
-  {
-    update_MDNS();
-    handle_webclient();
-    delay(value/100);
-  }
-}
-
-void set_time(int mode)
-{
-  //mode == LAZY ? set_direction(MIN_DISTANCE);
   int day_week = (weekday() + 5) % 7;
   if(get_sleep_time(day_week, hour()))
     stop();
@@ -93,7 +108,7 @@ void set_time(int mode)
     is_stopped = false;
     last_hour = hour();
     last_minute = minute();
-    switch(mode)
+    switch(get_clock_mode())
     {
       case LAZY:
         set_lazy();
@@ -153,5 +168,15 @@ void stop()
     set_speed(200);
     set_acceleration(100);
     set_clock(d_stop);
+  }
+}
+
+void _delay(int value)
+{
+  for (int i = 0; i <value/100; i++)
+  {
+    update_MDNS();
+    handle_webclient();
+    delay(value/100);
   }
 }

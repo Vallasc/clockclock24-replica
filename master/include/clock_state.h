@@ -3,8 +3,7 @@
 
 #include <Arduino.h>
 
-/***************** Shared *****************/
-
+/***************** Shared with slaves *****************/
 enum directions
 {
   CLOCKWISE,
@@ -43,7 +42,6 @@ typedef struct half_digit
 } t_half_digit;
 
 /***************** Local *****************/
-
 typedef struct clock_state_lite
 {
   uint16_t angle_h;
