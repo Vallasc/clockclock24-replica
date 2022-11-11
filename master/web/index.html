@@ -50,6 +50,7 @@
     .clock {
       --small-hand: 90deg;
       --large-hand: 90deg;
+      --animation-time: 15s;
       width: 8vw;
       height: 8vw;
       border-radius: 50%;
@@ -66,7 +67,8 @@
     .clock-smallHand,
     .clock-largeHand {
       transform-origin: 50px center;
-      transition: transform 15s;
+      transition-timing-function: ease;
+      transition: transform var(--animation-time);
     }
     
     .clock-smallHand {
@@ -285,7 +287,7 @@
               Array(24).fill(0)]
 
   // Current selected animation mode
-  let selectedMode = undefined
+  let selectedMode = 0
   // Current selected mode
   let selectedClock = undefined
   // Current selected day
@@ -305,7 +307,7 @@
 
   // Makes modes buttons 
   function genModes() {
-    let modes = ["LAZY", "FUN", "OFF"]
+    let modes = ["LAZY", "FUN", "WAVES", "OFF"]
     let html = ""
     let i = 0
     for (let m of modes)
@@ -357,7 +359,7 @@
 
   // Called on buttons clicks to select the mode
   function selectMode(mode) {
-    mode === 2 ? stopClock() : startClock()
+    mode === 3 ? stopClock() : startClock()
     if(selectedMode !== undefined)
       document.getElementById("mode-" + selectedMode).classList.remove("active")
     selectedMode = mode
@@ -551,6 +553,15 @@
     [270, 270]
   ]
 
+  const digit_II = [
+    [270, 90],
+    [270, 90],
+    [270, 90],
+    [270, 90],
+    [270, 90],
+    [270, 90]
+  ]
+
   // Number's digits
   const digits = [
     [    /* 0 */
@@ -632,65 +643,142 @@
   let current_state = Array(4).fill().map(() => Array(6).fill().map(()=> [270, 270]))
 
   // Sets hand[id] to specified angles
-  function setHands(id, h, m) {
+  function setHands(id, h, m, sec) {
     const clock = document.querySelector(`.clock--${id}`)
     clock.style.setProperty(`--small-hand`, `${h}deg`)
     clock.style.setProperty(`--large-hand`, `${m}deg`)
+    clock.style.setProperty(`--animation-time`, `${sec}s`)
   }
 
   // Calculates the difference angle in counter clockwise direction
-  function calcAngleCCW(current_angle, target_angle) {
-    let delta = (target_angle - current_angle) % 360
+  function calcAngleCCW(currentAngle, targetAngle) {
+    let delta = (targetAngle - currentAngle) % 360
     return Math.abs((delta <= 0) ? -delta : 360 - delta)
   }
 
   // Calculates the difference angle in clockwise direction
-  function calcAngleCW(current_angle, target_angle) {
-    let delta = (target_angle - current_angle) % 360
+  function calcAngleCW(currentAngle, targetAngle) {
+    let delta = (targetAngle - currentAngle) % 360
     return Math.abs((delta < 0) ? 360 + delta : delta)
   }
 
-  // Calculates and sets the digit on the clock
-  function setDigit(id, values) {
-    for (let x = 0; x < 6; x++) {
-      const curr = current_state[id][x]
-      const anim = anim_state[id][x]
+/* Directions:
+  0 CLOCKWISE
+  1 CLOCKWISE2
+  2 CLOCKWISE3
+  3 COUNTERCLOCKWISE
+  4 COUNTERCLOCKWISE2
+  5 COUNTERCLOCKWISE3
+  6 MIN_DISTANCE
+  7 MIN_DISTANCE2
+  8 MIN_DISTANCE3
+  9 MAX_DISTANCE
+  10 MAX_DISTANCE2
+  11 MAX_DISTANCE3
+*/
+
+  // Sets half digit
+  // 0 <= index < 8
+  function setHalfDigit(index, values, direction, secs) {
+    for (let x = 0; x < 3; x++) {
+      const curr = current_state[Math.floor(index/2)][x + (index%2)*3]
+      const anim = anim_state[Math.floor(index/2)][x + (index%2)*3]
+
       const d1 = calcAngleCW(curr[0], values[x][0])
       const d2 = calcAngleCCW(curr[0], values[x][0])
-      if(d1 <= d2) { /* Clockwise */
-        curr[0] = (curr[0] + d1) % 360 
-        anim[0] = anim[0] - d1 
-      } else { /* Counterclockwise */
-        curr[0] = (curr[0] - d2) % 360 
-        if(curr[0] < 0)
-          curr[0] += 360
-        anim[0] = anim[0] + d2 
-      }
-
       const d3 = calcAngleCW(curr[1], values[x][1])
       const d4 = calcAngleCCW(curr[1], values[x][1])
-      if(d3 <= d4) { /* Clockwise */
-        curr[1] = (curr[1] + d3) % 360 
-        anim[1] = anim[1] - d3 
-      } else { /* Counterclockwise */
+      const multiplier = (360 * (direction%3))
+      if(direction <= 2) { // CLOCKWISE
+        curr[0] = (curr[0] - d2) % 360 
+        curr[0] = curr[0] < 0 ? curr[0] += 360 : curr[0]
+        anim[0] = anim[0] + d2 + multiplier
         curr[1] = (curr[1] - d4) % 360
-        if(curr[1] < 0)
-          curr[1] += 360
-        anim[1] = anim[1] + d4 
+        curr[1] = curr[1] < 0 ? curr[1] += 360 : curr[1]
+        anim[1] = anim[1] + d4 + multiplier
+      } else if(direction <= 5) { // COUNTERCLOCKWISE
+        curr[0] = (curr[0] + d1) % 360
+        anim[0] = anim[0] - d1 - multiplier
+        curr[1] = (curr[1] + d3) % 360 
+        anim[1] = anim[1] - d3 - multiplier
+      } else if(direction <= 8) { // MIN_DISTANCE
+        if(d1 <= d2) { // COUNTERCLOCKWISE
+          curr[0] = (curr[0] + d1) % 360
+          anim[0] = anim[0] - d1 - multiplier
+        } else { // CLOCKWISE
+          curr[0] = (curr[0] - d2) % 360 
+          curr[0] = curr[0] < 0 ? curr[0] += 360 : curr[0]
+          anim[0] = anim[0] + d2 + multiplier
+        }
+        if(d3 <= d4) { // COUNTERCLOCKWISE
+          curr[1] = (curr[1] + d3) % 360 
+          anim[1] = anim[1] - d3 - multiplier
+        } else { // CLOCKWISE
+          curr[1] = (curr[1] - d4) % 360
+          curr[1] = curr[1] < 0 ? curr[1] += 360 : curr[1]
+          anim[1] = anim[1] + d4 + multiplier
+        }
+      } else if(direction <= 11) { // MAX_DISTANCE
+        if(d1 >= d2) { // COUNTERCLOCKWISE
+          curr[0] = (curr[0] + d1) % 360
+          anim[0] = anim[0] - d1 - multiplier
+        } else { // CLOCKWISE
+          curr[0] = (curr[0] - d2) % 360 
+          curr[0] = curr[0] < 0 ? curr[0] += 360 : curr[0]
+          anim[0] = anim[0] + d2 + multiplier
+        }
+        if(d3 >= d4) { // COUNTERCLOCKWISE
+          curr[1] = (curr[1] + d3) % 360 
+          anim[1] = anim[1] - d3 - multiplier
+        } else { // CLOCKWISE
+          curr[1] = (curr[1] - d4) % 360
+          curr[1] = curr[1] < 0 ? curr[1] += 360 : curr[1]
+          anim[1] = anim[1] + d4 + multiplier
+        }
       }
-
-      setHands(id * 6 + x, anim[0], anim[1])
+      setHands(index * 3 + x, anim[0], anim[1], secs)
     }
+  }
+
+  // Sets a digit
+  // 0 <= index < 4
+  function setDigit(index, digit, direction, secs) {
+    setHalfDigit(index*2, digit.slice(0, 3), direction, secs)
+    setHalfDigit(index*2 + 1, digit.slice(3, 6), direction, secs)
   }
 
   // Sets stop position
   function setStop() {
-    setDigit(0, digit_stop)
-    setDigit(1, digit_stop)
-    setDigit(2, digit_stop)
-    setDigit(3, digit_stop)
+    for (let i = 0; i < 4; i++)
+      setDigit(i, digit_stop, 6, 15)
   }
 
+  // Sets time with lazy animation
+  function setLazy(time) {
+    for (let i = 0; i < 4; i++)
+      setDigit(i, digits[time.charAt(i)], 6, 15)
+  }
+
+  // Sets time with fun animation
+  function setFun(time) {
+    for (let i = 0; i < 4; i++)
+      setDigit(i, digits[time.charAt(i)], 1, 16)
+  }
+
+  // Sets time with waves animation
+  function setWaves(time) {
+    for (let i = 0; i < 4; i++)
+      setDigit(i, digit_II, 6, 8)
+    for (let i = 0; i < 8; i++)
+      setTimeout(()=>{
+        setHalfDigit(i, digit_II, 1, 18)
+      }, 7000 + 400 * (i + 1))
+
+    for (let i = 0; i < 4; i++)
+      setTimeout(()=>{
+        setDigit(i, digits[time.charAt(i)], 0, 15)
+      }, 7000 + 9000 + 400 *(i*2 + 1))
+  }
 
   // Last time setted on clock
   let lastTime
@@ -698,15 +786,22 @@
   // Sets current time on clock
   function setTime() {
     const d = new Date();
-    const time = d.toTimeString().substring(0,5);
+    const time = d.toTimeString().substring(0,5).replace(':', '')
     const day = (d.getDay() + 6) % 7
     const hours = d.getHours()
     if (time !== lastTime && sleep[day][hours] === 0) {
       lastTime = time
-      setDigit(0, digits[time.charAt(0)])
-      setDigit(1, digits[time.charAt(1)])
-      setDigit(2, digits[time.charAt(3)])
-      setDigit(3, digits[time.charAt(4)])
+      switch(selectedMode) {
+        case 0:
+          setLazy(lastTime)
+          break;
+        case 1:
+          setFun(lastTime)
+          break;
+        case 2:
+          setWaves(lastTime)
+          break;
+      }
     } else if (sleep[day][hours] === 1) {
       setStop()
     }
