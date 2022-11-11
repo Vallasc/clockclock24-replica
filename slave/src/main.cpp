@@ -28,11 +28,6 @@ void receiveEvent(int how_many)
       target_clocks_state.clocks[i] = tmp_state.clocks[i];
       target_clocks_state.change_counter[i] = tmp_state.change_counter[i];
       spin_unlock_unsafe(spin_lock[i]); //Release the spin lock without re-enabling interrupts
-      // Serial.printf("clock %d, %d %d, c: %d\n", 
-      //   i,
-      //   target_clocks_state.clocks[i].speed_h,
-      //   target_clocks_state.clocks[i].accel_h,
-      //   target_clocks_state.change_counter[i]);
     }
   }
 }
@@ -90,6 +85,3 @@ void loop1()
     }
   }
 }
-
-
-// TODo motor disable
