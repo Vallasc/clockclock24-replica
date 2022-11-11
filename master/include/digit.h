@@ -4,14 +4,15 @@
 #include <Arduino.h>
 #include "clock_state.h"
 
-const t_digit digit_null = {
-  270, 270, 
-  270, 270, 
-  270, 270, 
-  270, 270,
-  270, 270,
-  270, 270
-};
+/**
+ * Digits
+ * structure: {
+ * h0, m0,
+ * h1, m1,
+ * ...
+ * h5, m5
+ * }
+*/
 
 const t_digit digit_0 = {
   270, 0,
@@ -102,5 +103,38 @@ const t_digit digit_9 = {
   270, 90,
   90, 180
 };
+
+const t_digit digit_null = {
+  270, 270,
+  270, 270,
+  270, 270,
+  270, 270,
+  270, 270,
+  270, 270
+};
+
+const t_digit digit_I = {
+  270, 90,
+  270, 90,
+  270, 90,
+  270, 90,
+  270, 90,
+  270, 90
+};
+
+const t_digit digit_fun = {
+  225, 45,
+  225, 45,
+  225, 45,
+  225, 45,
+  225, 45,
+  225, 45,
+};
+
+const t_full_clock d_stop = {digit_null, digit_null, digit_null, digit_null};
+
+const t_full_clock d_fun = {digit_fun, digit_fun, digit_fun, digit_fun};
+
+const t_full_clock d_IIII = {digit_I, digit_I, digit_I, digit_I};
 
 #endif
