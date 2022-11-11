@@ -19,6 +19,8 @@ enum clock_modes
 {
   LAZY,
   FUN,
+  //CENTRIC,
+  WAVES,
   OFF
 };
 
