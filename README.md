@@ -81,12 +81,11 @@ The code is multicore, one core gets bytes from the I2C bus and saves them in th
 ### Master
 The master code is runned by ESP8266, it is in charge of send actual hands position to all the boards and to serve the web application.
 
-When it is powered on, tries to connect to the configured WiFi network, if it fails then makes an open network. Time synchronization is made using NTP service, if internet connection is available, or it is taken from the client browser that visits the web app.
+At powered on, tries to connect to the configured WiFi network, if it fails then makes an open network. Time synchronization is made using NTP service, if internet connection is available, or it is taken from the client browser that visits the web app.
 
 When time changes it send to the corresponding board the new hands position, the way in which these are to be moved (clockwise, counter clockwise, min distance, max distance, etc.), the speed and the acceleration.
 
-
-
+In the meantime it responds to the requested made by the web application.
 ### Web Interface
 
 ---
