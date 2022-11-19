@@ -8,16 +8,15 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 
 ##### Table of Contents:
 1. [Hardware](#hardware)
-    1. [Motor](#motors)
-    1. [Microcontroller](#)
-    1. [BOM (Bill Of Materials)](#)
-    2. [PCB]()
+    1. [Motor](#motor)
+    1. [Microcontroller](#microcontroller)
+    2. [PCB](#PCB)
 2. [Software](#software)
     1. [Communicaation](#)
     1. [Master](#)
     2. [Slave]()
 ## Hardware
-The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. Each clock module has two motors that move the two lancets.
+The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. I design a module that contains 3 clocks and it can show vertically an half digit. A total of 8 boards are used to make up the entire clock,  nothing prohibits adding more, thus increasing the number of digits.
 
 ### Motor
 After careful research, VID28-05 (or BKA30D-R5) stepper motor were chosen. It is made by two separate motors that drives the two shaft individually, that is perfect for attaching the lancets.
@@ -27,3 +26,10 @@ These mototors are low power and can be runned directly by the microcontroller, 
 
 ### Microcontroller
 Two types of microcontrollers are used: raspberry-pi-pico (RP2040) and ESP8266. The main reason of this choice is that ESP8266 has wifi capabilities, the design was made before the release of raspberry-pi-pico-w, now the PCB could be simplified even more. ESP8266 acts as a master and sends commands to the pico boards that runs directly the motors. I chose raspberry-pi-pico because it has a lot of pins, it is reliable and it is available on the market at a relative low price.
+
+### PCB
+The schematic and all the gerber files are in the /pcb directory. 
+#### BOM (Bill Of Materials)
+<p align="center">
+<img width="800"  src="/images/schematic.jpg">
+</p>
