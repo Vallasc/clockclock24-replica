@@ -18,6 +18,7 @@
 #define F_STEP 10 // f(scx)
 #define F_DIR 11 // CW/CCW
 
+// I2C address
 #define ADDR_1 18
 #define ADDR_2 19
 #define ADDR_3 20
