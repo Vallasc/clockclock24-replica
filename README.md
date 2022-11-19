@@ -10,7 +10,8 @@ This is my personal implementation of the "ClockClock 24" by Humans Since 1982.
 
 Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 clocks which by animating show the time in digital format. My attempt to create a replica started by designing the PCB and the case that houses them, and then writing the software to drive the clocks.
 
-##### Table of Contents:
+---
+### Table of Contents:
 1. [Hardware](#hardware)
     1. [Motor](#motor)
     1. [Microcontroller](#microcontroller)
@@ -21,6 +22,8 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
     2. [Slave]()
     2. [Web Interface]()
 2. [Final result](#)
+
+---
 ## Hardware
 The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. I design a module that contains 3 clocks and it can show vertically an half digit. A total of 8 boards are used to make up the entire clock,  nothing prohibits adding more, thus increasing the number of digits.
 
@@ -35,7 +38,9 @@ Two types of microcontrollers are used: raspberry-pi-pico (RP2040) and ESP8266. 
 
 ### PCB
 The schematic and all the gerber files are placed in the /pcb directory. 
-
+<div align="center">
+<img align="center" width="800"  src="/images/pcb.jpg">
+</div>
 #### Schematic
 <div align="center">
 <img width="800"  src="/images/schematic.jpg">
@@ -58,9 +63,6 @@ Each board has 2 stepper controllers that in total can run 8 motors. As a design
 | 8 | (Optional) power connector |
 
 </div>
-<div align="center">
-<img align="center" width="800"  src="/images/pcb.jpg">
-</div>
-
+---
 
 ## Software
