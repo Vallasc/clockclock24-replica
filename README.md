@@ -22,4 +22,5 @@ The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that ar
 ### Motors
 After careful research, VID28-05 (or BKA30D-R5) stepper motor were chosen. It is made by two separate motors that drives the two shaft individually, that is perfect for attaching the lancets.
 
-![VID-28](/images/vid-28.gif)
+<img align="right" width="400"  src="/images/vid-28.gif">
+These mototors are low power and can be runned directly by the microcontroller, but i didn't want to put stress on the GPIO so I used a dedicated controller. Specifically the AX1201728SG (equivalent of X12.017 and VID6606), this chip offer advantages over running the motor directly such as: uses of microstepping, it requires only two GPIO pins per motor, it protects the microprocessor from the inductive effects of the motor coils and it requires lower current to be runned by the microcontroller.
