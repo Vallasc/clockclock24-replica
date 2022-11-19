@@ -24,12 +24,13 @@ void board_begin()
   pinMode(RESET, OUTPUT);
   digitalWrite(RESET, HIGH);
 
+  // Init motors
   for(int i = 0; i < 6; i++)
   {
     if(i % 2 == 1)
       _motors[i].setReverse(true);
     _motors[i].setMaxMotorSteps(STEPS);
-    _motors[i].setLancetAngle(INIT_LANCET_ANGLE);
+    _motors[i].setHandAngle(INIT_HANDS_ANGLE);
     _motors[i].setMinPulseWidth(0);
   }
 
@@ -76,14 +77,14 @@ void set_clock(int index, t_clock state)
   _motors[index*2 + 1].moveToAngle(angle_m, state.mode_m);
 }
 
-void adjust_h_lancet(int index, signed char amount)
+void adjust_h_hand(int index, signed char amount)
 {
   int steps = amount * STEPS / 360;
   _motors[index*2 + 1].move(steps);
   _motors[index*2 + 1].runToPosition();
 }
 
-void adjust_m_lancet(int index, signed char amount)
+void adjust_m_hand(int index, signed char amount)
 {
   int steps = amount * STEPS / 360;
   _motors[index*2].move(-steps);

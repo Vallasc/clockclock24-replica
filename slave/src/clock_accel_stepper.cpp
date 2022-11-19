@@ -7,7 +7,7 @@ ClockAccelStepper::ClockAccelStepper(uint8_t interface, uint8_t pin1, uint8_t pi
   _reverse = false;
 }
 
-void ClockAccelStepper::setLancetAngle(int angle)
+void ClockAccelStepper::setHandAngle(int angle)
 {
   _current_angle = angle;
 }

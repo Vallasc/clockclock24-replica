@@ -74,11 +74,11 @@ void loop1()
       current_clocks_state.change_counter[i] = target_clocks_state.change_counter[i];
       spin_unlock_unsafe(spin_lock[i]);
 
-      if(current_clocks_state.clocks[i].mode_h == ADJUST_LANCET)
-        adjust_h_lancet(i, current_clocks_state.clocks[i].adjust_h);
+      if(current_clocks_state.clocks[i].mode_h == ADJUST_HAND)
+        adjust_h_hand(i, current_clocks_state.clocks[i].adjust_h);
 
-      if(current_clocks_state.clocks[i].mode_m == ADJUST_LANCET)
-        adjust_m_lancet(i, current_clocks_state.clocks[i].adjust_m);
+      if(current_clocks_state.clocks[i].mode_m == ADJUST_HAND)
+        adjust_m_hand(i, current_clocks_state.clocks[i].adjust_m);
 
       if(current_clocks_state.clocks[i].mode_h <= MAX_DISTANCE3)
         set_clock(i, current_clocks_state.clocks[i]);

@@ -126,13 +126,13 @@ t_full_clock get_clock_state_from_time(int h, int m)
   return clock_state;
 }
 
-void adjust_lancet(int clock_index, int h_amount, int m_amount)
+void adjust_hands(int clock_index, int h_amount, int m_amount)
 {
   t_half_digit tmp = _last_state[clock_index/3];
   tmp.clocks[clock_index % 3].adjust_h = ((signed char) h_amount);
   tmp.clocks[clock_index % 3].adjust_m = ((signed char) m_amount);
-  tmp.clocks[clock_index % 3].mode_h = ADJUST_LANCET;
-  tmp.clocks[clock_index % 3].mode_m = ADJUST_LANCET;
+  tmp.clocks[clock_index % 3].mode_h = ADJUST_HAND;
+  tmp.clocks[clock_index % 3].mode_m = ADJUST_HAND;
   tmp.clocks[clock_index % 3].speed_h = 5000;
   tmp.clocks[clock_index % 3].speed_m = 5000;
   tmp.clocks[clock_index % 3].accel_h = 5000;

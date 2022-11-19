@@ -110,7 +110,7 @@ void handle_post_adjust()
 
   Serial.printf("Adjust received, clock: %d, m_amount: %d, h_amount: %d\n", 
     clock_index, m_amount, h_amount);
-  adjust_lancet(clock_index, m_amount, h_amount);
+  adjust_hands(clock_index, m_amount, h_amount);
 }
 
 void handle_post_mode()

@@ -109,9 +109,9 @@ t_full_clock get_clock_state_from_time(int h, int m);
 
 /** 
  * @param clock_index   single clock index (0 <= index < 24)
- * @param h_amount      hours lancet degree of adjustment
- * @param m_amount      minutes lancet degree of adjustment
+ * @param h_amount      hours hand degree of adjustment
+ * @param m_amount      minutes hand degree of adjustment
 */
-void adjust_lancet(int clock_index, int h_amount, int m_amount);
+void adjust_hands(int clock_index, int h_amount, int m_amount);
 
 #endif

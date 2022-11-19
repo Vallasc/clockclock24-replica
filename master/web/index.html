@@ -302,7 +302,7 @@
 
   // Returns a single clock HTML element
   function clock(index) {
-    return `<div id="clock-${index}" class="clock-box hidden"><svg class="clock clock--${index}" width="100" height="100" viewBox="0 0 100 100" onclick="selectClock(${index})"><path class="clock-smallHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L95,53 L95,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path><path class="clock-largeHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L100,53 L100,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path></svg><div class="btn-clock btn-clock-tl" onclick="adjustLancet(${index}, 0, 1)">H+</div><div class="btn-clock btn-clock-tr" onclick="adjustLancet(${index}, 1, 0)">M+</div><div class="btn-clock btn-clock-bl" onclick="adjustLancet(${index}, 0, -1)">H-</div><div class="btn-clock btn-clock-br" onclick="adjustLancet(${index}, -1, 0)">M-</div></div>`
+    return `<div id="clock-${index}" class="clock-box hidden"><svg class="clock clock--${index}" width="100" height="100" viewBox="0 0 100 100" onclick="selectClock(${index})"><path class="clock-smallHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L95,53 L95,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path><path class="clock-largeHand" d="M50,47 C48.3431458,47 47,48.3431458 47,50 C47,51.6568542 48.3431458,53 50,53 L100,53 L100,47 L50,47 Z" stroke="none" fill="#FFF" fill-rule="evenodd"></path></svg><div class="btn-clock btn-clock-tl" onclick="adjustHand(${index}, 0, 1)">H+</div><div class="btn-clock btn-clock-tr" onclick="adjustHand(${index}, 1, 0)">M+</div><div class="btn-clock btn-clock-bl" onclick="adjustHand(${index}, 0, -1)">H-</div><div class="btn-clock btn-clock-br" onclick="adjustHand(${index}, -1, 0)">M-</div></div>`
   }
 
   // Makes modes buttons 
@@ -473,8 +473,8 @@
     document.getElementById("password").value = password = res.password
   }
 
-  // Sends an adjust lancet request
-  function adjustLancet(index, m_amount, h_amount) {
+  // Sends an adjust hand request
+  function adjustHand(index, m_amount, h_amount) {
     let f = new FormData()
     f.append("index", index.toString())
     f.append("m_amount", m_amount.toString())
