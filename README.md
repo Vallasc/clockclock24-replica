@@ -12,9 +12,14 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
     1. [Microcontrollers](#)
     1. [BOM (Bill Of Materials)](#)
     2. [PCB]()
-2. [Software](#)
+2. [Software](#software)
     1. [Communicaation](#)
     1. [Master](#)
     2. [Slave]()
 ## Hardware
-The clock is composed by 24 subclocks, arranged on a 8x3 matrix, fully independent.
+The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. Each clock module has two motors that move the two lancets.
+
+### Motors
+After careful research, VID28-05 (or BKA30D-R5) stepper motor were chosen. It is made by two separate motors that drives the two shaft individually, that is perfect for attaching the lancets.
+
+![VID-28](/images/vid-28.gif)
