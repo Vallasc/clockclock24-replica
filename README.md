@@ -15,14 +15,14 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 ### Table of Contents:
 1. [Hardware](#hardware)
     1. [Motor](#motor)
-    1. [Microcontroller](#microcontroller)
-    2. [PCB](#pcb)
+    2. [Microcontroller](#microcontroller)
+    3. [PCB](#pcb)
 2. [Software](#software)
     1. [Communicaation](#)
-    1. [Master](#)
-    2. [Slave]()
-    2. [Web Interface]()
-2. [Final result](#)
+    2. [Master](#)
+    3. [Slave]()
+    4. [Web Interface]()
+3. [Final result](#)
 
 ---
 
@@ -72,3 +72,11 @@ Each board has 2 stepper controllers that in total can run 8 motors. As a design
 ## Software
 Software side, two different projects were made for master and slave, PlatformIO was used for both of them. The project setup is easy with PlatformIO because it automatically downloads the necessary files. The only parameters you may need to change is upload_port and monitor_port in platformio.ini .
 
+### Master
+
+
+### Slave
+
+---
+
+## Final result
