@@ -18,9 +18,9 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
     2. [Microcontroller](#microcontroller)
     3. [PCB](#pcb)
 2. [Software](#software)
-    2. [Master](#)
-    3. [Slave]()
-    4. [Web Interface]()
+    1. [Master](#)
+    2. [Slave]()
+    3. [Web Interface]()
 3. [Final result](#)
 
 ---
