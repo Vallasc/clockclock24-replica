@@ -1,6 +1,10 @@
 # ClockClock 24 Replica
 This is my personal implementation of the "ClockClock 24" by Humans Since 1982.
 
+<p align="center">
+<img width="900"  src="/images/photo1.jpg">
+</p>
+
 | DISCLAIMER: All files in this repository are intended for personal use only. All design rights go to Humans Since 1982.|
 | - |
 
@@ -10,7 +14,7 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 1. [Hardware](#hardware)
     1. [Motor](#motor)
     1. [Microcontroller](#microcontroller)
-    2. [PCB](#PCB)
+    2. [PCB](#pcb)
 2. [Software](#software)
     1. [Communicaation](#)
     1. [Master](#)
@@ -34,7 +38,7 @@ The schematic and all the gerber files are in the /pcb directory.
 <p align="center">
 <img width="800"  src="/images/schematic.jpg">
 </p>
-Each board has 2 stepper controllers that in total can run 8 motors. As a design choice, the board has only 3 clocks (6 motors), so 2 outputs are unused. The schematic also contains 6 hall sendors which were to be used to automatically adjust the position of the hands, but in the end they were not added to the final prototype because the magnets were not powerful enough to trigger the sensors. Each board also has housing for ESP8266MINI but it should only be installed on one board (master). This makes it possible to produce only one type of printed circuit board to which components will be soldered according to purpose.
+Each board has 2 stepper controllers that in total can run 8 motors. As a design choice, the board has only 3 clocks (6 motors), so 2 outputs are unused. The schematic also contains 6 hall sendors which were to be used to automatically adjust the position of the hands, but in the end they were not added to the final prototype because the magnets were not powerful enough to trigger the sensors. Each board also has housing for ESP8266MINI but it should only be installed on one board (master). This makes it possible to produce only one type of printed circuit board to which components will be soldered according to purpose. Master talks to slaves using I2C protocol, each board i connected to the next in daisy chain. The board is powered with 5v and should approximately consume 150 mAh.
 
 #### Bill Of Materials (full clock)
 <div align="center">
@@ -49,7 +53,7 @@ Each board has 2 stepper controllers that in total can run 8 motors. As a design
 | 8 | DIP switch 4 switches |
 | 16 | JST XH 2.54 MALE 4 pins |
 | 14 | JST XH 2.54 FEMALE 4 pins (for connection cables) |
-
+| 8 | (Optional) power connector |
 </div>
 
 
