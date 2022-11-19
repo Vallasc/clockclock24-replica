@@ -85,7 +85,7 @@ At powered on, tries to connect to the configured WiFi network, if it fails then
 
 When time changes it send to the corresponding board the new hands position, the way in which these are to be moved (clockwise, counter clockwise, min distance, max distance, etc.), the speed and the acceleration.
 
-In the meantime it responds to the requested made by the web application.
+In the meantime it responds to the requested made by the web application made available at http://clockclock24.local .
 ### Web Interface
 
 ---
