@@ -8,8 +8,8 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 
 ##### Table of Contents:
 1. [Hardware](#hardware)
-    1. [Motors](#software)
-    1. [Microcontrollers](#)
+    1. [Motor](#motors)
+    1. [Microcontroller](#)
     1. [BOM (Bill Of Materials)](#)
     2. [PCB]()
 2. [Software](#software)
@@ -19,8 +19,11 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 ## Hardware
 The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. Each clock module has two motors that move the two lancets.
 
-### Motors
+### Motor
 After careful research, VID28-05 (or BKA30D-R5) stepper motor were chosen. It is made by two separate motors that drives the two shaft individually, that is perfect for attaching the lancets.
 
 <img align="right" width="400"  src="/images/vid-28.gif">
 These mototors are low power and can be runned directly by the microcontroller, but i didn't want to put stress on the GPIO so I used a dedicated controller. Specifically the AX1201728SG (equivalent of X12.017 and VID6606), this chip offer advantages over running the motor directly such as: uses of microstepping, it requires only two GPIO pins per motor, it protects the microprocessor from the inductive effects of the motor coils and it requires lower current to be runned by the microcontroller.
+
+### Microcontroller
+Two types of microcontrollers are used: raspberry-pi-pico (RP2040) and ESP8266. The main reason of this choice is that ESP8266 has wifi capabilities, the design was made before the release of raspberry-pi-pico-w, now the PCB could be simplified even more. ESP8266 acts as a master and sends commands to the pico boards that runs directly the motors. I chose raspberry-pi-pico because it has a lot of pins, it is reliable and it is available on the market at a relative low price.
