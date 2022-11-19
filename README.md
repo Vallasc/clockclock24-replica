@@ -72,7 +72,7 @@ Each board has 2 stepper controllers that in total can run 8 motors. As a design
 Software side, two different projects were made for master and slave, [PlatformIO](https://platformio.org/)  was used for both of them. The project setup is easy with PlatformIO because it automatically downloads the necessary files. The only parameters you may need to change is *upload_port* and *monitor_port* in *platformio.ini* .
 
 ### Slave
-The slave code is runned by Raspberry pico, it recives the taraget hands position throw I2C protocol and moves motors accordingly. 
+The slave code is runned by Raspberry pico, it recives the taraget hands position throw I2C protocol and moves motors accordingly. The I2C address is taken from the position of the 4 switches on the board.
 
 To have a fluid aniamtion, motion must be done using an acceleration curve, so it is used [AccelStepper](http://www.airspayce.com/mikem/arduino/AccelStepper/) library. 
 The code is multicore, one core gets bytes from the I2C bus and saves them in the internal buffer, the other core manage to run directly the stepper motors, doing so the animation is not stopped by the I2C interrupts.
@@ -89,6 +89,13 @@ At powered on, tries to connect to the configured WiFi network, if it fails then
     3. **Waves**, reproduce a domino animation.
 
 ### Web Interface
+On the web application is shown an exact copy of the clock, also animations are cloned and occurs at the same time. The interface allows you to change clock mode, set the hours when it should not work  and change the wireless connection.
+
+Credits for the clock's web design animation go to [Manuel Wieser](https://manu.ninja/).
+
+<div align="center">
+<img width="800"  src="/images/web.jpg">
+</div>
 
 ---
 
