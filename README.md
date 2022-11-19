@@ -18,7 +18,6 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
     2. [Microcontroller](#microcontroller)
     3. [PCB](#pcb)
 2. [Software](#software)
-    1. [Communicaation](#)
     2. [Master](#)
     3. [Slave]()
     4. [Web Interface]()
@@ -70,12 +69,25 @@ Each board has 2 stepper controllers that in total can run 8 motors. As a design
 ---
 
 ## Software
-Software side, two different projects were made for master and slave, PlatformIO was used for both of them. The project setup is easy with PlatformIO because it automatically downloads the necessary files. The only parameters you may need to change is upload_port and monitor_port in platformio.ini .
-
-### Master
-
+Software side, two different projects were made for master and slave, [PlatformIO](https://platformio.org/)  was used for both of them. The project setup is easy with PlatformIO because it automatically downloads the necessary files. The only parameters you may need to change is upload_port and monitor_port in platformio.ini .
 
 ### Slave
+The slave code is runned by Raspberry pico, it recives the taraget hands position throw I2C protocol and moves motors accordingly. 
+
+To have a fluid aniamtion, motion must be done using an acceleration curve, so it is used [AccelStepper](http://www.airspayce.com/mikem/arduino/AccelStepper/) library. 
+The code is multicore, one core gets bytes from the I2C bus and saves them in the internal buffer, the other core manage to run directly the stepper motors, doing so the animation is not stopped by the I2C interrupts.
+
+
+### Master
+The master code is runned by ESP8266, it is in charge of send actual hands position to all the boards and to serve the web application.
+
+When it is powered on, tries to connect to the configured WiFi network, if it fails then makes an open network. Time synchronization is made using NTP service, if internet connection is available, or it is taken from the client browser that visits the web app.
+
+When time changes it send to the corresponding board the new hands position, the way in which these are to be moved (clockwise, counter clockwise, min distance, max distance, etc.), the speed and the acceleration.
+
+
+
+### Web Interface
 
 ---
 
