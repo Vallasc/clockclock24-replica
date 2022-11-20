@@ -21,7 +21,9 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
     1. [Master](#master)
     2. [Slave](#slave)
     3. [Web Interface](#web-interface)
-3. [Final result](#final-result)
+    4. [Hands calibration](#hands-calibration)
+3. [Case and clock's hands](#case-and-clock's-hands)
+4. [Final result](#final-result)
 
 ---
 
@@ -89,16 +91,25 @@ At powered on, tries to connect to the configured WiFi network, if it fails then
     2. **Fun**, moves all clock's hands in clockwise direction.
     3. **Waves**, reproduce a domino animation.
 
-### Web Interface
+### Web interface
 On the web application is shown an exact copy of the clock, also animations are cloned and occurs at the same time. The interface allows you to change clock mode, set the hours when it should not work  and change the wireless connection.
 
 Credits for the clock's web design animation go to [Manuel Wieser](https://manu.ninja/).
 
 <div align="center">
-<img width="800"  src="/images/web.jpg">
+<img width="500"  src="/images/web.jpg">
 </div>
 
 ### Hands calibration
+Before powering on the clock you need to manually set all the clock's hands at 6 o'clock. This process needs to be done every time it is disconnected from power.
+
+---
+
+## Case and clock's hands
+The case is one piece, it was made by taking a sheet of black MDF and hollowing out the material with a CNC machine. This gives a lot of stiffness to the structure. The clock's hands are laser cutted from a white plexiglass panel.
+
+Since I don't want to receive a letter from Human since 1982 lawyers', all design files and the actual clock assembly are omitted, more [here](https://hackaday.com/2020/07/31/patent-law-and-the-legality-of-making-something-similar/).
+> “Human since 1982 have the copyright to works displaying digital time using a grid arrangement of analog clocks…”
 
 ---
 
