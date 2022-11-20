@@ -108,8 +108,8 @@ Before powering on the clock, you need to manually set all the clock's hands at 
 ## Case and clock's hands
 The case is one piece, it was made by taking a sheet of black MDF and hollowing out the material with a CNC machine. This gives a lot of stiffness to the structure. The clock's hands are laser cutted from a white plexiglass panel.
 
-Since I don't want to receive a letter from Human Since 1982’s lawyers, all design files and the actual clock assembly are omitted, more [here](https://hackaday.com/2020/07/31/patent-law-and-the-legality-of-making-something-similar/).
-> “Humans since 1982 have the copyright to works displaying digital time using a grid arrangement of analog clocks…”
+Since I don't want to receive a letter from Humans Since 1982’s lawyers, all design files and the actual clock assembly are omitted, more [here](https://hackaday.com/2020/07/31/patent-law-and-the-legality-of-making-something-similar/).
+> “Humans Since 1982 have the copyright to works displaying digital time using a grid arrangement of analog clocks…”
 
 ---
 
