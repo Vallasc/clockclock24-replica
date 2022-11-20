@@ -26,17 +26,17 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 ---
 
 ## Hardware
-The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. I design a module that contains 3 clocks and it can show vertically an half digit. A total of 8 boards are used to make up the entire clock,  nothing prohibits adding more, thus increasing the number of digits.
+The entire clock is composed by 24 sub-clocks, arranged on a 8x3 matrix, that are fully independent. It was designed a module that contains 3 clocks and it can show vertically an half digit. A total of 8 boards are used to make up the entire clock,  nothing prohibits adding more, thus increasing the number of digits.
 
 ### Motor
 After careful research, *VID28-05* (or *BKA30D-R5*) stepper motor were chosen. It is made by two separate motors that drives the two shaft individually, that is perfect for attaching the hands. Moreover, this type is sold by some vendor (search on Aliexpress) with no endstops and can turn freely.
 
 <img align="right" width="400"  src="/images/vid-28.gif">
 
-These mototors are low power and can be runned directly by the microcontroller, but i didn't want to put stress on the GPIO so I used a dedicated controller. Specifically the *AX1201728SG* (equivalent of *X12.017* and *VID6606*), this chip offer advantages over running the motor directly such as: uses of microstepping, it requires only two GPIO pins per motor, it protects the microprocessor from the inductive effects of the motor coils and it requires lower current to be runned by the microcontroller.
+These mototors are low power and can be runned directly by the microcontroller, but in order not to strees the GPIO so it was used a dedicated controller. Specifically the *AX1201728SG* (equivalent of *X12.017* and *VID6606*), this chip offer advantages over running the motor directly such as: uses of microstepping, it requires only two GPIO pins per motor, it protects the microprocessor from the inductive effects of the motor coils and it requires lower current to be runned by the microcontroller.
 
 ### Microcontroller
-Two types of microcontrollers are used: **Raspberry-pi-pico** (RP2040) and **ESP8266**. The main reason of this choice is that ESP8266 has wifi capabilities, the design was made before the release of Raspberry-pi-pico-w, now the PCB could be simplified even more. ESP8266 acts as a master and sends commands to the pico boards that runs directly the motors. I chose raspberry-pi-pico because it has a lot of pins, it is reliable and it is available on the market at a relative low price.
+Two types of microcontrollers are used: **Raspberry-pi-pico** (RP2040) and **ESP8266**. The main reason of this choice is that ESP8266 has wifi capabilities, the design was made before the release of Raspberry-pi-pico-w, now the PCB could be simplified even more. ESP8266 acts as a master and sends commands to the pico boards that runs directly the motors. It was chosen raspberry-pi-pico because it has a lot of pins, it is reliable and it is available on the market at a relative low price.
 
 ### PCB
 The schematic and all the gerber files are placed in the *./pcb* directory. 
@@ -48,7 +48,7 @@ The schematic and all the gerber files are placed in the *./pcb* directory.
 <div align="center">
 <img width="800"  src="/images/schematic.jpg">
 </div>
-Each board has 2 stepper controllers that in total can run 8 motors. As a design choice, the board has only 3 clocks (6 motors), so 2 outputs are unused. The schematic also contains 6 hall sendors which were to be used to automatically adjust the position of the hands, but in the end they were not added to the final prototype because the magnets were not powerful enough to trigger the sensors. Each board also has housing for ESP8266MINI but it should only be installed on one board (master). This makes it possible to produce only one type of printed circuit board to which components will be soldered according to purpose. Master talks to slaves using I2C protocol, each board i connected to the next in daisy chain. The board is powered with 5v and should approximately consume 150 mAh.
+Each board has 2 stepper controllers that in total can run 8 motors. As a design choice, the board has only 3 clocks (6 motors), so 2 outputs are unused. The schematic also contains 6 hall sendors which were to be used to automatically adjust the position of the hands, but in the end they were not added to the final prototype because the magnets were not powerful enough to trigger the sensors. Each board also has housing for ESP8266MINI but it should only be installed on one board (master). This makes it possible to produce only one type of printed circuit board to which components will be soldered according to purpose. Master talks to slaves using I2C protocol, each board is connected to the next in daisy chain. The board is powered with 5v and should approximately consume 150 mAh.
 
 #### Bill Of Materials (full clock)
 <div align="center">
@@ -98,6 +98,17 @@ Credits for the clock's web design animation go to [Manuel Wieser](https://manu.
 <img width="800"  src="/images/web.jpg">
 </div>
 
+### Hands calibration
+
 ---
 
 ## Final result
+<div align="center">
+
+| Animation type | Reuslt |
+| - | - |
+| Lazy | ![sasdasd](/images/clock1.gif) |
+| Fun | ![sasdasd](/images/clock2.gif) |
+| Waves | ![sasdasd](/images/clock3.gif) |
+
+</div>
