@@ -12,7 +12,7 @@ Clockclock is a kinetic sculpture design by Humans Since 1982, consisting of 24 
 
 ---
 
-### Table of Contents:
+### Table of Contents: 
 1. [Hardware](#hardware)
     1. [Motor](#motor)
     2. [Microcontroller](#microcontroller)
