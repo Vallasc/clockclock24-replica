@@ -149,6 +149,7 @@ void handle_post_connection()
   if (_server.hasArg("password"))
     set_password(_server.arg("password").c_str());
   _server.send(200, "text/plain", "");
+  end_config();
   ESP.restart();
 }
 

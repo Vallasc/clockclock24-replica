@@ -418,9 +418,12 @@
       document.getElementById("external").classList.add("hidden")
     }
     // Hotspot mode, update directly
-    if(mode === 0 && selectedConnection !== mode)
-        saveConnection()
-    selectedConnection = mode
+    if(mode === 0 && selectedConnection !== mode && selectedConnection !== undefined) {
+      selectedConnection = mode
+      saveConnection()
+    } else {
+      selectedConnection = mode
+    }
     if(mode === 1) // Show SSID and password fields
       document.getElementById("external").classList.remove("hidden")
     document.getElementById("con-" + selectedConnection).classList.add("active")
@@ -533,7 +536,7 @@
       method: "post",
       body: f,
     })
-    location.reload()
+    setTimeout(() => location.reload(), 2000)
   }
 
   // On the first run, updates the datetime on the clock and

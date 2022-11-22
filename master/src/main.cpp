@@ -63,14 +63,18 @@ void setup() {
     set_connection_mode(HOTSPOT);
     wifi_create_AP("ClockClock 24", "clockclock24");
   }
+
+  if(get_connection_mode() == EXT_CONN)
+  {
+    // Initialize NTP
+    begin_NTP();
+    setSyncProvider(get_NTP_time);
+    // Sync every 30 minutes
+    setSyncInterval(60 * 30);
+  }
+
   // Starts web server
   server_start();
-
-  // Initialize NTP
-  begin_NTP();
-  setSyncProvider(get_NTP_time);
-  // Sync every 30 minutes
-  setSyncInterval(60 * 30);
 }
 
 void loop() {
