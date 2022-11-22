@@ -84,7 +84,7 @@ The code is multicore, one core gets bytes from the I2C bus and saves them in th
 ### Master
 The master code is runned by ESP8266, it is in charge of sending actual hands position to all the boards and to serve the web application.
 
-When powered on, it tries to connect to the configured WiFi network, if it fails then makes an open network. Time synchronization is made, if internet connection is available, using NTP service or it is taken from the client browser that visits the web app. When time changes it sends to the corresponding board the new hands position, the way in which these are to be moved (clockwise, counter clockwise, min distance, max distance, etc.), the speed and the acceleration. In the meantime, it responds to the requests made by the web application made available at http://clockclock24.local.
+When powered on, it tries to connect to the configured WiFi network, if it fails then makes an open network. Time synchronization is made, if internet connection is available, using NTP service or it is taken from the client browser that visits the web app. When time changes it sends to the corresponding board the new hands position, the way in which these are to be moved (clockwise, counter clockwise, min distance, max distance, etc.), the speed and the acceleration. In the meantime, it responds to the requests made by the web application made available at http://192.168.1.10 or http://clockclock24.local.
 
 * Animation modes available (for now):
     1. **Lazy**, moves only clock hands that need to be changed by traveling the minimum distance.
